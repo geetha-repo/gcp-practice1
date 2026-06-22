@@ -1,0 +1,108 @@
+﻿complete GCP VM + NGINX deployment using only gcloud commands 
+
+
+Initiate Gcloud and run the following command: 
+
+
+Authenticate: 
+
+
+gcloud auth login
+
+
+List accounts:
+
+
+gcloud auth list
+
+
+Select the project from the dropdown in the cloud shell or give gcloud config set PROJECT ID
+
+
+List the Billing account
+
+
+Gcloud billing account list
+
+
+gcloud billing projects link Project_ID \
+    --billing-account=BILLING_ACCOUNT_ID
+
+
+Enable Compute Engine API: 
+
+Gcloud services enable compute.googleapis.com
+
+Set compute region:
+
+
+Gcloud config set compute/region us-central1
+Gcloud config set compute/zone us-central-a
+
+
+Create VM:
+
+gcloud compute instances create nginx-vm \
+    --machine-type=e2-micro \
+    --image-family=debian-12 \
+    --image-project=debian-cloud \
+    --tags=http-server
+
+
+
+
+Check if the instance is created or not:
+
+
+Gcloud compute instances list
+
+Create VM:
+gcloud compute instances create nginx-vm \
+    --machine-type=e2-micro \
+    --image-family=debian-12 \
+    --image-project=debian-cloud \
+    --tags=http-server
+
+
+Create Firewall rule:
+
+gcloud compute firewall-rules create allow-http \
+    --network=default \
+    --allow=tcp:80 \
+    --source-ranges=0.0.0.0/0 \
+    --target-tags=http-server
+
+
+SSH into the VM
+
+
+gcloud compute ssh nginx-vm
+
+Run the following to update the VM:
+
+sudo apt update
+sudo apt install nginx -y
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+Deploy sample page:
+
+
+echo "<h1>Hello from NGINX on GCP</h1>" | sudo tee /var/www/html/index.html
+
+Test the web page locally:
+
+
+Curl localhost
+
+Get the external IP:
+
+
+curl -4 ifconfig.co
+
+IP:35.192.151.122
+
+Run this command to access the web page:http://35.192.151.122
+
+
+Output: Hello from NGINX on GCP
