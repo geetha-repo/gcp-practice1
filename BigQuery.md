@@ -1,0 +1,1 @@
+BigQuery-> serverless datawarehouse, you will pay for what you use
